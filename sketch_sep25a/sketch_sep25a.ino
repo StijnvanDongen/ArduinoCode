@@ -14,17 +14,46 @@
 
 #include <Wire.h>
 #include <ZumoShield.h>
+#include <ZumoReflectanceSensorArray.h>
+#include <Pushbutton.h>
+#include <QTRSensors.h>
+#define NUM_SENSORS 6
+#define LED 13
+#define QTR_THRESHOLD  1000
 
 ZumoBuzzer buzzer;
 ZumoReflectanceSensorArray reflectanceSensors;
 ZumoMotors motors;
 Pushbutton button(ZUMO_BUTTON);
 int lastError = 0;
+ZumoReflectanceSensorArray sensors(QTR_NO_EMITTER_PIN);
 
 // This is the maximum speed the motors will be allowed to turn.
 // (400 lets the motors go at top speed; decrease to impose a speed limit)
 const int MAX_SPEED = 400;
 int state=0;
+
+unsigned int sensor_values[NUM_SENSORS];
+
+void waitForButtonAndCountDown()
+{
+  digitalWrite(LED, HIGH);
+  button.waitForButton();
+  digitalWrite(LED, LOW);
+
+  // play audible countdown
+  for (int i = 0; i < 3; i++)
+  {
+    delay(1000);
+    buzzer.playNote(NOTE_G(3), 200, 15);
+  }
+  delay(100);
+  buzzer.playNote(NOTE_G(4), 500, 15);
+  delay(100);
+}
+
+
+
 
 void setup()
 {
@@ -44,7 +73,7 @@ void setup()
   digitalWrite(13, HIGH);
 
   // Wait 1 second and then begin automatic sensor calibration
-  // by rotating in place to sweep the sensors over the line
+  // by rotating in place to sweep the sensors over the line*/
   delay(1000);
   int i;
   for(i = 0; i < 80; i++)
@@ -63,139 +92,155 @@ void setup()
 
   // Turn off LED to indicate we are through with calibration
   digitalWrite(13, LOW);
+  /*
   buzzer.play(">g32>>c32");
-
+*/
   // Wait for the user button to be pressed and released
   button.waitForButton();
-
+/*
   // Play music and wait for it to finish before we start driving.
   buzzer.play("L16 cdegreg4");
   while(buzzer.isPlaying());*/
+
+  pinMode(LED, HIGH);
+
+  waitForButtonAndCountDown();
   
   Serial.begin(9600);
 }
 
+
 void stopRobot()
 {
-  Serial.write("stoprobot");
+  motors.setSpeeds(0, 0);
+  Serial.write("Stop");
 }
 
 void turnLeftRobot()
 {
-  Serial.write("turnleft");
- 
+  motors.setSpeeds(200, -200);
+ Serial.write("TurnLeft");
 }
 
 void turnRightRobot()
 {
-  Serial.write("turnright");  
+  motors.setSpeeds(-200, 200);
+ Serial.write("TurnRight");
 }
 
 void forwardRobot()
 {
-  Serial.write("forward");  
+  motors.setSpeeds(200, 200);
+  Serial.write("Forward");
 }
+/*
+void caseFinding(){
+  motors.setSpeeds(50, 200);
+  Serial.write("caseFinding");
+}
+*/
 
-void loop()
-{
+void loop(){
+  sensors.read(sensor_values);
+  //actions();
 
-
-  readSensors();
-  actions();
-  button.waitForButton();
-  
 
 
 /*
  * State selection
  */
-switch(state)
-{
-  case 0 :
-    stopRobot();
-  break;
-  case 1 :
-    forwardRobot();
-  break;  
-  case 2 :
-    turnLeftRobot();
-  break;
-  case 3 :
-    turnRightRobot();
-  break;
-  default:
-  break;  
-}
-  button.waitForButton();
-  state=1;
-switch(state)
-{
-  case 0 :
-    stopRobot();
-  break;
-  case 1 :
-    forwardRobot();
-  break;  
-  case 2 :
-    turnLeftRobot();
-  break;
-  case 3 :
-    turnRightRobot();
-  break;
-  default:
-  break;   
-}  
-  button.waitForButton();
-  state=2;
+
 
 switch(state)
 {
   case 0 :
     stopRobot();
+    if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD &&sensor_values[4] < QTR_THRESHOLD &&sensor_values[5] < QTR_THRESHOLD && sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD )     // Move Forward
+    {
+       state = 1;
+    }
+    if(sensor_values[5] > QTR_THRESHOLD)
+      {
+        state = 2;
+      }
+     if(sensor_values[0] > QTR_THRESHOLD)
+      {
+      state = 3;
+      }
+      if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD && sensor_values[2] < QTR_THRESHOLD && sensor_values[3] < QTR_THRESHOLD && sensor_values[4] < QTR_THRESHOLD && sensor_values[5] < QTR_THRESHOLD)
+      {
+        state = 4;
+        }
   break;
   case 1 :
     forwardRobot();
+    if(sensor_values[5] > QTR_THRESHOLD)
+      {
+        state = 2;
+      }
+     if(sensor_values[0] > QTR_THRESHOLD)
+      {
+      state = 3;
+      }
+      if(sensor_values[0] > QTR_THRESHOLD && sensor_values[1] > QTR_THRESHOLD && sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD && sensor_values[4] > QTR_THRESHOLD && sensor_values[5] > QTR_THRESHOLD)
+      {
+        state = 0;
+        }
+        if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD && sensor_values[2] < QTR_THRESHOLD && sensor_values[3] < QTR_THRESHOLD && sensor_values[4] < QTR_THRESHOLD && sensor_values[5] < QTR_THRESHOLD)
+      {
+        state = 4;
+        }
   break;  
   case 2 :
     turnLeftRobot();
+    if(sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD)     // Move Forward
+    {
+       state = 1;
+    }
+    if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD && sensor_values[2] < QTR_THRESHOLD && sensor_values[3] < QTR_THRESHOLD && sensor_values[4] < QTR_THRESHOLD && sensor_values[5] < QTR_THRESHOLD)
+      {
+        state = 4;
+        }
+      
   break;
   case 3 :
     turnRightRobot();
+    if(sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD)     // Move Forward
+    {
+       state = 1;
+    }
+    if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD && sensor_values[2] < QTR_THRESHOLD && sensor_values[3] < QTR_THRESHOLD && sensor_values[4] < QTR_THRESHOLD && sensor_values[5] < QTR_THRESHOLD)
+      {
+        state = 4;
+        }
   break;
+ /* case 4 :
+  caseFinding();
+  if(sensor_values[5] > QTR_THRESHOLD)
+      {
+        state = 2;
+      }
+     if(sensor_values[0] > QTR_THRESHOLD)
+      {
+      state = 3;
+      }
+      if(sensor_values[0] > QTR_THRESHOLD && sensor_values[1] > QTR_THRESHOLD && sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD && sensor_values[4] > QTR_THRESHOLD && sensor_values[5] > QTR_THRESHOLD)
+      {
+        state = 0;
+        }
+        if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD &&sensor_values[4] < QTR_THRESHOLD &&sensor_values[5] < QTR_THRESHOLD && sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD )     // Move Forward
+    {
+       state = 1;
+    }
+  break;
+  */
   default:
-  break;   
-}
-     button.waitForButton();
-  state=3;
-switch(state)
-{
-  case 0 :
-    stopRobot();
-  break;
-  case 1 :
-    forwardRobot();
+  state = 0;
   break;  
-  case 2 :
-    turnLeftRobot();
-  break;
-  case 3 :
-    turnRightRobot();
-  break;
-  default:
-  break; 
-}
-state=0;
 }
 
-
-
-
-
-
-
-
-
-
+  
+}
 
 /*
 
