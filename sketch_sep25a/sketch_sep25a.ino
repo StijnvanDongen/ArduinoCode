@@ -33,6 +33,13 @@ ZumoReflectanceSensorArray sensors(QTR_NO_EMITTER_PIN);
 const int MAX_SPEED = 400;
 int state=0;
 
+bool sensor1;
+bool sensor2;
+bool sensor3;
+bool sensor4;
+bool sensor5;
+bool sensor6;
+
 unsigned int sensor_values[NUM_SENSORS];
 
 void waitForButtonAndCountDown()
@@ -96,7 +103,6 @@ void setup()
   buzzer.play(">g32>>c32");
 */
   // Wait for the user button to be pressed and released
-  button.waitForButton();
 /*
   // Play music and wait for it to finish before we start driving.
   buzzer.play("L16 cdegreg4");
@@ -118,32 +124,38 @@ void stopRobot()
 
 void turnLeftRobot()
 {
-  motors.setSpeeds(200, -200);
+  motors.setSpeeds(400, -400);
  Serial.write("TurnLeft");
 }
 
 void turnRightRobot()
 {
-  motors.setSpeeds(-200, 200);
+  motors.setSpeeds(-400, 400);
  Serial.write("TurnRight");
 }
 
 void forwardRobot()
 {
-  motors.setSpeeds(200, 200);
+  motors.setSpeeds(400, 400);
   Serial.write("Forward");
 }
-/*
+
 void caseFinding(){
   motors.setSpeeds(50, 200);
   Serial.write("caseFinding");
 }
-*/
+
 
 void loop(){
   sensors.read(sensor_values);
   //actions();
-
+ 
+sensor1 = sensor_values[0] >  QTR_THRESHOLD;
+sensor2 = sensor_values[1] >  QTR_THRESHOLD;
+sensor3 = sensor_values[2] >  QTR_THRESHOLD;
+sensor4 = sensor_values[3] >  QTR_THRESHOLD;
+sensor5 = sensor_values[4] >  QTR_THRESHOLD;
+sensor6 = sensor_values[5] >  QTR_THRESHOLD;
 
 
 /*
@@ -155,7 +167,7 @@ switch(state)
 {
   case 0 :
     stopRobot();
-    if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD &&sensor_values[4] < QTR_THRESHOLD &&sensor_values[5] < QTR_THRESHOLD && sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD )     // Move Forward
+    if(!sensor1 && !sensor2 && !sensor5 && !sensor6 && sensor3 && sensor4 )     // Move Forward
     {
        state = 1;
     }
@@ -201,6 +213,15 @@ switch(state)
       {
         state = 4;
         }
+
+        if(sensor_values[0] > QTR_THRESHOLD)
+      {
+      state = 3;
+      }
+      if(sensor_values[5] > QTR_THRESHOLD)
+      {
+        state = 2;
+      }
       
   break;
   case 3 :
@@ -214,7 +235,7 @@ switch(state)
         state = 4;
         }
   break;
- /* case 4 :
+  case 4 :
   caseFinding();
   if(sensor_values[5] > QTR_THRESHOLD)
       {
@@ -233,7 +254,7 @@ switch(state)
        state = 1;
     }
   break;
-  */
+  
   default:
   state = 0;
   break;  
