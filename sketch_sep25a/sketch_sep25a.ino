@@ -124,27 +124,27 @@ void stopRobot()
 
 void turnLeftRobot()
 {
-  motors.setSpeeds(400, -400);
+  motors.setSpeeds(200, 0);
  Serial.write("TurnLeft");
 }
 
 void turnRightRobot()
 {
-  motors.setSpeeds(-400, 400);
+  motors.setSpeeds(0, 200);
  Serial.write("TurnRight");
 }
 
 void forwardRobot()
 {
-  motors.setSpeeds(400, 400);
+  motors.setSpeeds(200, 200);
   Serial.write("Forward");
 }
-
+/*
 void caseFinding(){
   motors.setSpeeds(50, 200);
   Serial.write("caseFinding");
 }
-
+*/
 
 void loop(){
   sensors.read(sensor_values);
@@ -178,11 +178,11 @@ switch(state)
      if(sensor1)
       {
       state = 3;
-      }
+      }/*
       if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
       {
         state = 4;
-        }
+        }*/
   break;
   case 1 :
     forwardRobot();
@@ -197,28 +197,28 @@ switch(state)
       if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6)
       {
         state = 0;
-        }
+        }/*
         if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
       {
         state = 4;
-        }
+        }*/
   break;  
   case 2 :
     turnLeftRobot();
-    if(sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD)     // Move Forward
+    if(!sensor1 && !sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)     // Move Forward
     {
        state = 1;
-    }
+    }/*
     if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
       {
         state = 4;
-        }
+        }*/
 
-        if(sensor5)
+        if(sensor1)
       {
       state = 3;
       }
-      if(!sensor1 && !sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)
+      if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6)
       {
         state = 0;
         }
@@ -229,11 +229,11 @@ switch(state)
     if(!sensor1 && !sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)     // Move Forward
     {
        state = 1;
-    }
+    }/*
     if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
       {
         state = 4;
-        }
+        }*/
 
         if(sensor6)
       {
@@ -244,6 +244,7 @@ switch(state)
         state = 0;
         }
   break;
+  /*
   case 4 :
   caseFinding();
   if(sensor6)
@@ -263,7 +264,7 @@ switch(state)
        state = 1;
     }
   break;
-  
+  */
   default:
   state = 0;
   break;  
