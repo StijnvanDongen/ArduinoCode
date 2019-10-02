@@ -171,34 +171,34 @@ switch(state)
     {
        state = 1;
     }
-    if(sensor_values[5] > QTR_THRESHOLD)
+    if(sensor6)
       {
         state = 2;
       }
-     if(sensor_values[0] > QTR_THRESHOLD)
+     if(sensor1)
       {
       state = 3;
       }
-      if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD && sensor_values[2] < QTR_THRESHOLD && sensor_values[3] < QTR_THRESHOLD && sensor_values[4] < QTR_THRESHOLD && sensor_values[5] < QTR_THRESHOLD)
+      if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
       {
         state = 4;
         }
   break;
   case 1 :
     forwardRobot();
-    if(sensor_values[5] > QTR_THRESHOLD)
+    if(sensor6)
       {
         state = 2;
       }
-     if(sensor_values[0] > QTR_THRESHOLD)
+     if(sensor1)
       {
       state = 3;
       }
-      if(sensor_values[0] > QTR_THRESHOLD && sensor_values[1] > QTR_THRESHOLD && sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD && sensor_values[4] > QTR_THRESHOLD && sensor_values[5] > QTR_THRESHOLD)
+      if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6)
       {
         state = 0;
         }
-        if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD && sensor_values[2] < QTR_THRESHOLD && sensor_values[3] < QTR_THRESHOLD && sensor_values[4] < QTR_THRESHOLD && sensor_values[5] < QTR_THRESHOLD)
+        if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
       {
         state = 4;
         }
@@ -209,47 +209,56 @@ switch(state)
     {
        state = 1;
     }
-    if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD && sensor_values[2] < QTR_THRESHOLD && sensor_values[3] < QTR_THRESHOLD && sensor_values[4] < QTR_THRESHOLD && sensor_values[5] < QTR_THRESHOLD)
+    if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
       {
         state = 4;
         }
 
-        if(sensor_values[0] > QTR_THRESHOLD)
+        if(sensor5)
       {
       state = 3;
       }
-      if(sensor_values[5] > QTR_THRESHOLD)
+      if(!sensor1 && !sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)
       {
-        state = 2;
-      }
+        state = 0;
+        }
       
   break;
   case 3 :
     turnRightRobot();
-    if(sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD)     // Move Forward
+    if(!sensor1 && !sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)     // Move Forward
     {
        state = 1;
     }
-    if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD && sensor_values[2] < QTR_THRESHOLD && sensor_values[3] < QTR_THRESHOLD && sensor_values[4] < QTR_THRESHOLD && sensor_values[5] < QTR_THRESHOLD)
+    if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
       {
         state = 4;
+        }
+
+        if(sensor6)
+      {
+        state = 2;
+      }
+      if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6)
+      {
+        state = 0;
         }
   break;
   case 4 :
   caseFinding();
-  if(sensor_values[5] > QTR_THRESHOLD)
+  if(sensor6)
       {
         state = 2;
       }
-     if(sensor_values[0] > QTR_THRESHOLD)
+     if(sensor1)
       {
       state = 3;
       }
-      if(sensor_values[0] > QTR_THRESHOLD && sensor_values[1] > QTR_THRESHOLD && sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD && sensor_values[4] > QTR_THRESHOLD && sensor_values[5] > QTR_THRESHOLD)
+      if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6)
       {
         state = 0;
         }
-        if(sensor_values[0] < QTR_THRESHOLD && sensor_values[1] < QTR_THRESHOLD &&sensor_values[4] < QTR_THRESHOLD &&sensor_values[5] < QTR_THRESHOLD && sensor_values[2] > QTR_THRESHOLD && sensor_values[3] > QTR_THRESHOLD )     // Move Forward
+        if(!sensor1 && !sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)     // Move Forward
     {
        state = 1;
     }
