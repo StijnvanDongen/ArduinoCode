@@ -124,13 +124,13 @@ void stopRobot()
 
 void turnLeftRobot()
 {
-  motors.setSpeeds(200, 0);
+  motors.setSpeeds(400, 0);
  Serial.write("TurnLeft");
 }
 
 void turnRightRobot()
 {
-  motors.setSpeeds(0, 200);
+  motors.setSpeeds(0, 400);
  Serial.write("TurnRight");
 }
 
@@ -171,11 +171,11 @@ switch(state)
     {
        state = 1;
     }
-    if(sensor6)
+    if(!sensor6 && !sensor1 && !sensor2 && !sensor3 && !sensor4 && sensor5)
       {
         state = 2;
       }
-     if(sensor1)
+     if(!sensor1 && sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
       {
       state = 3;
       }/*
@@ -197,7 +197,8 @@ switch(state)
       if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6)
       {
         state = 0;
-        }/*
+        }
+        /*
         if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
       {
         state = 4;
