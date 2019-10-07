@@ -1,4 +1,4 @@
-/*
+ /*
  * Demo line-following code for the Pololu Zumo Robot
  *
  * This code will follow a black line on a white background, using a
@@ -124,13 +124,13 @@ void stopRobot()
 
 void turnLeftRobot()
 {
-  motors.setSpeeds(400, 0);
+  motors.setSpeeds(300, -100);
  Serial.write("TurnLeft");
 }
 
 void turnRightRobot()
 {
-  motors.setSpeeds(0, 400);
+  motors.setSpeeds(-100, 300);
  Serial.write("TurnRight");
 }
 
