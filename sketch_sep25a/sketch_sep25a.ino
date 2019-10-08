@@ -1,3 +1,4 @@
+
  /*
  * Demo line-following code for the Pololu Zumo Robot
  *
@@ -116,23 +117,10 @@ void setup()
   Serial.begin(9600);
 }
 
-
 void stopRobot()
 {
   motors.setSpeeds(0, 0);
   Serial.write("Stop");
-}
-
-void turnLeftRobot()
-{
-  motors.setSpeeds(300, -100);
- Serial.write("TurnLeft");
-}
-
-void turnRightRobot()
-{
-  motors.setSpeeds(-100, 300);
- Serial.write("TurnRight");
 }
 
 void forwardRobot()
@@ -140,12 +128,161 @@ void forwardRobot()
   motors.setSpeeds(200, 200);
   Serial.write("Forward");
 }
-/*
-void caseFinding(){
-  motors.setSpeeds(50, 200);
-  Serial.write("caseFinding");
+
+/************************************************************************************************************************left************************************************/
+void left90Robot()
+{
+  motors.setSpeeds(300, -100);
+ Serial.write("Left 90");
 }
-*/
+
+void left75Robot()
+{
+    motors.setSpeeds(200, 0);
+    Serial.write("left 75");
+}
+
+void left50Robot()
+{
+    motors.setSpeeds(200, 50);
+    Serial.write("Left 50");
+}
+
+void left25Robot()
+{
+    motors.setSpeeds(200, 100);
+    Serial.write("left 25");
+}
+void left5Robot()
+{
+    motors.setSpeeds(200,150);
+    Serial.write("left 5");
+}
+/***********************************************************************************************************************right************************************************/
+void right90Robot()
+{
+  motors.setSpeeds(-100, 300);
+ Serial.write("right 90");
+}
+
+void right75Robot()
+{
+    motors.setSpeeds(0, 200);
+    Serial.write("right 75");
+}
+
+void right50Robot()
+{
+    motors.setSpeeds(50, 200);
+    Serial.write("right 50");
+}
+
+void right25Robot()
+{
+    motors.setSpeeds(100, 200);
+    Serial.write("right 25");
+}
+void right5Robot()
+{
+    motors.setSpeeds(150,200);
+    Serial.write("right 5");
+}
+
+void stopit()
+{
+      if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6)
+      {
+      state = 0;
+      }
+}
+
+void forward()
+{
+
+    if(!sensor1 && !sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)     // Move Forward
+    {
+       state = 1;
+    }
+}
+/************************************************************************************************************************left************************************************/
+void left90()
+{
+  if( !sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && sensor6)
+      {
+        state = 2;
+      }
+}
+
+void left75()
+{
+  if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && sensor5 && sensor6)
+  {
+    state = 3;
+  }
+}
+
+void left50()
+{
+  if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && sensor5 && !sensor6)
+  {
+    state = 4;
+  }
+}
+
+void left25()
+{
+  if(!sensor1 && !sensor2 && !sensor3 && sensor4 && sensor5 && !sensor6)
+  {
+    state = 5;
+  }
+}
+void left5()
+{
+  if(!sensor1 && !sensor2 && !sensor3 && sensor4 && !sensor5 && !sensor6)
+  {
+    state = 6;
+  }
+}
+/***********************************************************************************************************************right************************************************/
+
+void right90()
+{
+  if( sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
+      {
+        state = 7;
+      }
+}
+
+void right75()
+{
+  if(sensor1 && sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
+  {
+    state = 8;
+  }
+}
+
+void right50()
+{
+  if(!sensor1 && sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
+  {
+    state = 9;
+  }
+}
+
+void right25()
+{
+  if(!sensor1 && sensor2 && sensor3 && !sensor4 && !sensor5 && !sensor6)
+  {
+    state = 10;
+  }
+}
+void right5()
+{
+  if(!sensor1 && !sensor2 && sensor3 && !sensor4 && !sensor5 && !sensor6)
+  {
+    state = 11;
+  }
+}
 
 void loop(){
   sensors.read(sensor_values);
@@ -158,115 +295,185 @@ sensor4 = sensor_values[3] >  QTR_THRESHOLD;
 sensor5 = sensor_values[4] >  QTR_THRESHOLD;
 sensor6 = sensor_values[5] >  QTR_THRESHOLD;
 
-
 /*
  * State selection
  */
+ 
 
 
 switch(state)
 {
-  case 0 :
+  case 0 :            //stop case
     stopRobot();
-    if(!sensor1 && !sensor2 && !sensor5 && !sensor6 && sensor3 && sensor4 )     // Move Forward
-    {
-       state = 1;
-    }
-    if(!sensor6 && !sensor1 && !sensor2 && !sensor3 && !sensor4 && sensor5)
-      {
-        state = 2;
-      }
-     if(!sensor1 && sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
-      {
-      state = 3;
-      }/*
-      if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
-      {
-        state = 4;
-        }*/
+    forward();
+    left90();
+    left75();
+    left50();
+    left25();
+    left5();
+    right90();
+    right75();
+    right50();
+    right25();
+    right5(); 
   break;
-  case 1 :
+  case 1 :            //forward case
     forwardRobot();
-    if(sensor6)
-      {
-        state = 2;
-      }
-     if(sensor1)
-      {
-      state = 3;
-      }
-      if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6)
-      {
-        state = 0;
-        }
-        /*
-        if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
-      {
-        state = 4;
-        }*/
+    stopit();
+    left90();
+    left75();
+    left50();
+    left25();
+    left5();
+    right90();
+    right75();
+    right50();
+    right25();
+    right5(); 
+      
   break;  
-  case 2 :
-    turnLeftRobot();
-    if(!sensor1 && !sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)     // Move Forward
-    {
-       state = 1;
-    }/*
-    if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
-      {
-        state = 4;
-        }*/
-
-        if(sensor1)
-      {
-      state = 3;
-      }
-      if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6)
-      {
-        state = 0;
-        }
+  case 2 :            //left case
+    left90Robot();
+    stopit();
+    forward();
+    left75();
+    left50();
+    left25();
+    left5();
+    right90();
+    right75();
+    right50();
+    right25();
+    right5(); ;
       
   break;
   case 3 :
-    turnRightRobot();
-    if(!sensor1 && !sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)     // Move Forward
-    {
-       state = 1;
-    }/*
-    if(!sensor1 && !sensor2 && !sensor3 && !sensor4 && !sensor5 && !sensor6)
-      {
-        state = 4;
-        }*/
-
-        if(sensor6)
-      {
-        state = 2;
-      }
-      if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6)
-      {
-        state = 0;
-        }
+     left75Robot();
+     stopit();
+    forward();
+    left90();
+    left50();
+    left25();
+    left5();
+    right90();
+    right75();
+    right50();
+    right25();
+    right5(); 
   break;
-  /*
   case 4 :
-  caseFinding();
-  if(sensor6)
-      {
-        state = 2;
-      }
-     if(sensor1)
-      {
-      state = 3;
-      }
-      if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6)
-      {
-        state = 0;
-        }
-        if(!sensor1 && !sensor2 && sensor3 && sensor4 && !sensor5 && !sensor6)     // Move Forward
-    {
-       state = 1;
-    }
+      left50Robot();
+      stopit();
+    forward();
+    left90();
+    left75();
+    left25();
+    left5();
+    right90();
+    right75();
+    right50();
+    right25();
+    right5(); 
   break;
-  */
+  case 5 :
+      left25Robot();
+      stopit();
+    forward();
+    left90();
+    left75();
+    left50();
+    left5();
+    right90();
+    right75();
+    right50();
+    right25();
+    right5(); 
+  break;
+  case 6:
+      left5Robot();
+      stopit();
+    forward();
+    left90();
+    left75();
+    left50();
+    left25();
+    right90();
+    right75();
+    right50();
+    right25();
+    right5(); 
+  break;    
+  case 7 :            //right case
+    right90Robot();
+    stopit();
+    forward();
+    left90();
+    left75();
+    left50();
+    left25();
+    left5();
+    right75();
+    right50();
+    right25();
+    right5(); 
+  break;
+  case 8 :
+      left75Robot();
+      stopit();
+    forward();
+    left90();
+    left75();
+    left50();
+    left25();
+    left5();
+    right90();
+    right50();
+    right25();
+    right5(); 
+  break;
+  case 9:
+      left50Robot();
+      stopit();
+    forward();
+    left90();
+    left75();
+    left50();
+    left25();
+    left5();
+    right90();
+    right75();
+    right25();
+    right5(); 
+  break;
+  case 10:
+      left25Robot();
+      stopit();
+    forward();
+    left90();
+    left75();
+    left50();
+    left25();
+    left5();
+    right90();
+    right75();
+    right50();
+    right5(); 
+  break;
+  case 11:
+      right5Robot();
+      stopit();
+    forward();
+    left90();
+    left75();
+    left50();
+    left25();
+    left5();
+    right90();
+    right75();
+    right50();
+    right25();
+  break;
+ 
   default:
   state = 0;
   break;  
@@ -274,26 +481,3 @@ switch(state)
 
   
 }
-
-/*
-
-  
-  if(sensor[2] && sensor[3]))     // Move Forward
-  {
-    motors.setSpeed(MAX_SPEED);
-  }
-  
-  if(!(sensor[1]) && sensor[4])     // Turn right
-  {
-    
-  }
-  
-  if(sensor[1] && !(sensor[4]))     // turn left
-  {
-    
-  }
-  
-  if(!(sensors[6]))     // stop
-  {
-    motors.setSpeed(0);
-  }*/
