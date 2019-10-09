@@ -418,7 +418,7 @@ switch(state)
     right5(); 
   break;
   case 8 :
-      left75Robot();
+      right75Robot();
       stopit();
     forward();
     left90();
@@ -432,7 +432,7 @@ switch(state)
     right5(); 
   break;
   case 9:
-      left50Robot();
+      right50Robot();
       stopit();
     forward();
     left90();
@@ -446,7 +446,7 @@ switch(state)
     right5(); 
   break;
   case 10:
-      left25Robot();
+      right25Robot();
       stopit();
     forward();
     left90();
