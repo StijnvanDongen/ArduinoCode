@@ -41,6 +41,7 @@ bool sensor3;
 bool sensor4;
 bool sensor5;
 bool sensor6;
+int gamestage;
 
 unsigned int sensor_values[NUM_SENSORS];
 
@@ -115,11 +116,13 @@ void setup()
   waitForButtonAndCountDown();
   
   Serial.begin(9600);
+  gamestage = 1;
+
 }
 
 void stopRobot()
 {
-  motors.setSpeeds(0, 0);
+  motors.setSpeeds(200, 200);
   Serial.write("Stop");
 }
 
@@ -138,24 +141,24 @@ void left90Robot()
 
 void left75Robot()
 {
-    motors.setSpeeds(200, 0);
+    motors.setSpeeds(300, 0);
     Serial.write("left 75");
 }
 
 void left50Robot()
 {
-    motors.setSpeeds(200, 50);
+    motors.setSpeeds(300, 150);
     Serial.write("Left 50");
 }
 
 void left25Robot()
 {
-    motors.setSpeeds(200, 100);
+    motors.setSpeeds(300, 200);
     Serial.write("left 25");
 }
 void left5Robot()
 {
-    motors.setSpeeds(200,150);
+    motors.setSpeeds(300,250);
     Serial.write("left 5");
 }
 /***********************************************************************************************************************right************************************************/
@@ -167,33 +170,48 @@ void right90Robot()
 
 void right75Robot()
 {
-    motors.setSpeeds(0, 200);
+    motors.setSpeeds(0, 300);
     Serial.write("right 75");
 }
 
 void right50Robot()
 {
-    motors.setSpeeds(50, 200);
+    motors.setSpeeds(150, 300);
     Serial.write("right 50");
 }
 
 void right25Robot()
 {
-    motors.setSpeeds(100, 200);
+    motors.setSpeeds(200, 300);
     Serial.write("right 25");
 }
 void right5Robot()
 {
-    motors.setSpeeds(150,200);
+    motors.setSpeeds(250,300);
     Serial.write("right 5");
+
 }
 
 void stopit()
 {
-      if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6)
+      if(gamestage == 1)
       {
-      state = 0;
+        Serial.write("Start Pitstop");
+        
+        if(sensor1 && sensor2 && sensor3 && sensor4 && sensor5 && sensor6)
+        {
+        motors.setSpeeds(0,0);
+        delay(1000);
+        motors.setSpeeds(200,200);
+        state = 1;
+        gamestage = 0;
+        Serial.write("Stop Pitstop");        
+        }
       }
+//      else
+//      {
+//        state = 1;
+//      }
 }
 
 void forward()
@@ -305,7 +323,6 @@ switch(state)
 {
   case 0 :            //stop case
     stopRobot();
-    forward();
     left90();
     left75();
     left50();
@@ -315,11 +332,13 @@ switch(state)
     right75();
     right50();
     right25();
-    right5(); 
+    right5();
+    forward();
+    
+     
   break;
   case 1 :            //forward case
     forwardRobot();
-    stopit();
     left90();
     left75();
     left50();
@@ -330,12 +349,13 @@ switch(state)
     right50();
     right25();
     right5(); 
+    stopit();
+    
+    
       
   break;  
   case 2 :            //left case
     left90Robot();
-    stopit();
-    forward();
     left75();
     left50();
     left25();
@@ -344,13 +364,15 @@ switch(state)
     right75();
     right50();
     right25();
-    right5(); ;
+    right5();
+    stopit();
+    forward();
+    
+    
       
   break;
   case 3 :
      left75Robot();
-     stopit();
-    forward();
     left90();
     left50();
     left25();
@@ -360,11 +382,13 @@ switch(state)
     right50();
     right25();
     right5(); 
+    stopit();
+    forward();
+    
+    
   break;
   case 4 :
       left50Robot();
-      stopit();
-    forward();
     left90();
     left75();
     left25();
@@ -374,53 +398,60 @@ switch(state)
     right50();
     right25();
     right5(); 
+    stopit();
+    forward();
+    
+    
   break;
   case 5 :
       left25Robot();
-      stopit();
-    forward();
-    left90();
-    left75();
-    left50();
-    left5();
     right90();
     right75();
     right50();
     right25();
     right5(); 
-  break;
-  case 6:
-      left5Robot();
-      stopit();
-    forward();
-    left90();
-    left75();
-    left50();
-    left25();
-    right90();
-    right75();
-    right50();
-    right25();
-    right5(); 
-  break;    
-  case 7 :            //right case
-    right90Robot();
     stopit();
     forward();
     left90();
     left75();
     left50();
+    left5();
+    
+  break;
+  case 6:
+      left5Robot();
+    left90();
+    left75();
+    left50();
+    left25();
+    right90();
+    right75();
+    right50();
+    right25();
+    right5();
+    stopit();
+    forward();
+    
+     
+  break;    
+  case 7 :            //right case
+    right90Robot();
+    left90();
+    left75();
+    left50();
     left25();
     left5();
     right75();
     right50();
     right25();
     right5(); 
+    stopit();
+    forward();
+    
+    
   break;
   case 8 :
       right75Robot();
-      stopit();
-    forward();
     left90();
     left75();
     left50();
@@ -430,11 +461,13 @@ switch(state)
     right50();
     right25();
     right5(); 
+    stopit();
+    forward();
+    
+    
   break;
   case 9:
       right50Robot();
-      stopit();
-    forward();
     left90();
     left75();
     left50();
@@ -444,11 +477,13 @@ switch(state)
     right75();
     right25();
     right5(); 
+    stopit();
+    forward();
+    
+    
   break;
   case 10:
       right25Robot();
-      stopit();
-    forward();
     left90();
     left75();
     left50();
@@ -458,11 +493,13 @@ switch(state)
     right75();
     right50();
     right5(); 
+    stopit();
+    forward();
+    
+    
   break;
   case 11:
       right5Robot();
-      stopit();
-    forward();
     left90();
     left75();
     left50();
@@ -472,12 +509,17 @@ switch(state)
     right75();
     right50();
     right25();
+    stopit();
+    forward();
+    
+    
   break;
  
   default:
   state = 0;
   break;  
-}
 
+}
+      Serial.write(state);
   
 }
